@@ -7,6 +7,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserPreferenceSerializer(serializers.ModelSerializer):
+    read_books = serializers.PrimaryKeyRelatedField(many=True, queryset=Book.objects.all())
     class Meta:
         model = UserPreference
-        fields = '__all__'
+        fields = ['preferred_genres','read_books']
