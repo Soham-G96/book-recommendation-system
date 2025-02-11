@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, UserPreference
+from .models import Book, UserPreference, Rating
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,3 +11,8 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
         fields = ['preferred_genres','read_books']
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = '__all__'

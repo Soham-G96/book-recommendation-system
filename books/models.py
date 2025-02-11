@@ -22,3 +22,11 @@ class UserPreference(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Preferences'
+    
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="book_rating")
+    rating = models.IntegerField(default=0) # Ratings from 1 to 5
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.book.title} as {self.rating}/5"
