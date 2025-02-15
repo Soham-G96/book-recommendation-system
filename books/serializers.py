@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, UserPreference, Rating
+from .models import Book, UserPreference, Review
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +12,13 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         model = UserPreference
         fields = ['preferred_genres','read_books']
 
-class RatingSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Rating
-        fields = '__all__'
+        model = Review
+        fields = ['id', 'book', 'user', 'rating', 'review_text', 'sentiment_score']
+        read_only_fields = ['id', 'user','book', 'sentiment_score']
+
+    def create(self, validated_data):
+        # Override create to ensure the user is automatically assigned
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
