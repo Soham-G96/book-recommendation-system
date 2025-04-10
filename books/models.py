@@ -12,7 +12,7 @@ class Book(models.Model):
     genre = models.CharField(max_length=100)
     description = models.TextField()
     rating = models.FloatField(default=0.0)
-    cover_image = models.URLField(blank=True, null=True)
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
 
     def update_rating(self):
         avg_rating = self.reviews.aggregate(avg_rating=Avg('sentiment_score'))['avg_rating']
