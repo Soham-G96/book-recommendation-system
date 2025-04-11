@@ -14,6 +14,21 @@ class Book(models.Model):
     rating = models.FloatField(default=0.0)
     cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.cover_image:
+            image_path = self.cover_image.path
+            try:
+                img = Image.open(image_path)
+                #Resize to consistent dimensions
+                max_size = (400,600)
+                img.thumbnail(max_size, Image.ANTIALIAS)
+                #save it back to the same path
+                img.save(image_path)
+            except Exception as e:
+                print(f"Image resize error: {e}")
+                
     def update_rating(self):
         avg_rating = self.reviews.aggregate(avg_rating=Avg('sentiment_score'))['avg_rating']
         self.rating = avg_rating if avg_rating is not None else 0.0
