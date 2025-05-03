@@ -6,10 +6,16 @@ from django.db.models import Avg
 from nltk.sentiment import SentimentIntensityAnalyzer
 
 # Create your models here.
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
-    genre = models.CharField(max_length=100)
+    genre = models.ManyToManyField(Genre, related_name='books')
     description = models.TextField()
     rating = models.FloatField(default=0.0)
     cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
@@ -39,7 +45,7 @@ class Book(models.Model):
     
 class UserPreference(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    preferred_genres = models.TextField() # To store genres as csv
+    preferred_genres = models.ManyToManyField('Genre', blank=True)
     read_books = models.ManyToManyField(Book, blank=True, related_name='read_by_users')
 
     def __str__(self):

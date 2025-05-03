@@ -2,18 +2,22 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
-from .models import Book, UserPreference, Review
-from .serializers import BookSerializer, UserPreferenceSerializer, ReviewSerializer
+from .models import Book, UserPreference, Review, Genre
+from .serializers import BookSerializer, UserPreferenceSerializer, ReviewSerializer, GenreSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
+class GenreListView(generics.ListAPIView):
+    queryset = Genre.objects.all().order_by('name')
+    serializer_class = GenreSerializer
 class BookListCreateView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
-    print("queryset - ",queryset.values_list('pk','title'))
-    serializer_class = BookSerializer
+    print("table name - ", Genre._meta.db_table)
+    # print("queryset - ",queryset.values_list('pk','title'))
+    serializer_class = BookSerializer 
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):

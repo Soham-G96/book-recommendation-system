@@ -1,6 +1,7 @@
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -46,3 +47,13 @@ class LoginView(generics.GenericAPIView):
             }, status=status.HTTP_200_OK)
         return Response({"error":"Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
     
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response ({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }, status=status.HTTP_200_OK)
